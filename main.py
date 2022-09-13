@@ -3,10 +3,12 @@ import nextcord
 import os
 
 from utils.assets import DEFAULT_COLOR
+from utils.responses import status_list
 from utils.functions import embed
 from utils.Storage import Variables
 from dotenv import load_dotenv
 from nextcord.ext import commands, tasks
+from random import choice
 
 # LOADING ENVIRONMENT
 load_dotenv()
@@ -44,29 +46,19 @@ bot.color = lambda g: bot.config_color.get(g.id, DEFAULT_COLOR)
 async def on_ready():
     print("Thwipper is now online.")
 
-@bot.event
-async def on_message(message):
-    await bot.process_commands(message)
-    if f"<@{bot.user.id}>" == message.content:
-        embed = embed(
-            title="Your friendly serverhood spider-bot!",
-            description=f"Hi {message.author.name}!\nI am **Thwipper**. My name comes from the onomatopoeia of Spider-Man's Webshooters. Pretty slick, eh? I have lots of cool features that you may find interesting. Check them out with `_help` command. As always, more exciting features are always in the works. Stay tuned and have fun with them.\n_Excelsior!_",
-            color=bot.color(message.guild),
-            thumbnail=bot.user.avatar,
-            fields={
-                "Made by": "[Tamonud](https://www.github.com/spidey711)",
-                "Source Code": "[Github Repo](https://www.github.com/spidey711/Thwipper-bot)"
-            }
-        )
-        await message.reply(embed=embed)
-
-@tasks.loop(minutes=1)
+@tasks.loop(minutes=2)
 async def loop():
     var.edit(
         config_color = bot.config_color,
         queue_song = bot.queue_song
     )
     var.save()
+    await bot.change_presence(
+        activity=nextcord.Activity(
+            type=nextcord.ActivityType.playing, 
+            name=choice(status_list)
+        )
+    )
 
 # LOAD COGS
 for i in os.listdir("cogs/"):

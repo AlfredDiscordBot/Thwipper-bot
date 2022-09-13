@@ -51,8 +51,12 @@ class TimeZone(commands.Cog):
     @nextcord.slash_command(name="calendar", description="Get calendar")
     async def get_calendar(self, inter: nextcord.Interaction, year: int, month: int):
         try:
-            e = embed(description="```{}```".format(calendar.month(int(year), int(month))), color=self.bot.color(inter.guild))
-            e.set_author(name="Calendar")
+            e = embed(
+                description="```{}```".format(calendar.month(int(year), int(month))), 
+                color=self.bot.color(inter.guild),
+                author={'name': 'Calendar', 'icon_url': url_dtc},
+                thumbnail=self.bot.user.avatar
+            )
             await inter.send(embed=e)
             
         except IndexError:

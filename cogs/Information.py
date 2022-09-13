@@ -100,6 +100,33 @@ class Information(commands.Cog):
     async def display_help_menu(self, ctx):
         await pages(ctx, get_help_embeds(self.bot.color(ctx.guild), ctx)) 
 
+    @commands.Cog.listener()
+    async def on_message(self, message: nextcord.message.Message):
+        if f"<@{self.bot.user.id}>" in message.content and not message.author.bot:
+            e, view = embed(
+                title="Your friendly neightbourhood Spider-Bot",
+                description="Hi {}!\nI am `Thwipper`. My name comes from the onomatopoeia of Spider-Man's Webshooters. Pretty slick, eh? I have lots of cool features that you may find interesting. Check them out with `_help` command. As always, more exciting features are always in the works. Stay tuned and have fun with them.\n_Excelsior!_".format(message.author.name),
+                color=self.bot.color(message.guild),
+                thumbnail=self.bot.user.avatar,
+                author=message.author,
+                button=[
+                    {
+                        'label': 'Github Repository',
+                        'emoji': '<:github:1004764713642627103>',
+                        'url': 'https://www.github.com/spidey711/Thwipper-bot'
+                    },
+                    {
+                        'label': 'Author',
+                        'emoji': '<:spiderman:982567257584594954>',
+                        'url': 'https://www.github.com/spidey711'
+                    }
+                ]
+            )   
+            await message.reply(
+                embed=e,
+                view=view
+            )
+
 
 def setup(bot, *args):
     bot.add_cog(Information(bot, *args))
